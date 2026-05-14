@@ -1,4 +1,4 @@
-## Product Decision Log: Walking Pad Workout Widget
+## Product Decision Log: Walking Pad Workout Tool
 
 Built by: Jessica Parker  
 Type: Personal tool / public artifact  

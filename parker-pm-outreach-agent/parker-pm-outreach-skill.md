@@ -1,11 +1,11 @@
 
+name: parker-pm-outreach
 
-name: parker-pm-outreach 
 description: "Create this as a skill to get a semi-automated outreach researcher. You paste in one or more companies (name and/or website, maybe LinkedIn URL) Via batched sub-agents: web-searches each one: recent funding, job postings, product news, patient-facing product details. Scores each against your ICP (Series B/C health tech, patient access problem, signs of product chaos or compliance gaps) Drafts a personalized outreach email per company using your email profile Drafts a personalized outreach LinkedIn InMail per company Finds potential best outreach contact. Outputs a review dashboard: score, research summary, draft email, draft InMail, possible best contacts with contact information, One-click to approve add to notion database and an excel spreadsheet. You send from Gmail"
 
-Parker PM Outreach Tool
+## Parker PM Outreach Tool
 
-TLDR
+**TL;DR**
 
 Trigger: parker pm outreach [companies] or outreach [companies]
 Researches each company in parallel batches of 3
@@ -16,18 +16,18 @@ Save trigger: save [company name] logs that company to Notion
 
 
 
-Trigger Phrases
+**Trigger Phrases**
 
 parker pm outreach [company names or URLs]
 outreach [company names or URLs]
 
-Examples:
+**Examples:**
 outreach Medefy Health, PointClickCare
 parker pm outreach https://linktr.ee/Medefy_Health
 
+___
 
-
-What Gets Researched
+## What Gets Researched
 
 For each company, Claude runs web searches covering:
 
@@ -39,17 +39,17 @@ Best contact: name, title, email, LinkedIn URL, confidence level, how found
 
 
 
-Output Format Per Company
+## Output Format Per Company
 
 [Company Name] · [website] · ICP Score: [X]/10 · [Strong fit / Possible fit / Weak fit]
 
-Research
+**Research**
 What they do: [2-3 sentences]
 Recent activity: [funding, launches, hires, news — or "Nothing recent found"]
 Product signals: [what their product situation looks like from outside]
 ICP reasoning: [specific fit/no-fit reasoning against Jessica's ICP]
 
-Best contact
+**Best contact**
 Name: [name or Not found]
 Title: [title or Not found]
 Email: [email or Not publicly available]
@@ -57,7 +57,7 @@ LinkedIn: [URL or Not found]
 Confidence: [high / medium / low / not found]
 Note: [how found or why unavailable]
 
-ICP signals
+**ICP signals**
 [✓ / ✗ / ?] Health tech
 [✓ / ✗ / ?] Patient-facing product
 [✓ / ✗ / ?] Series A-C
@@ -65,30 +65,30 @@ ICP signals
 [✓ / ✗ / ?] Right contact reachable
 [✓ / ✗ / ?] AI-enabled
 
-Cold email
+**Cold email**
 Subject: [subject line]
 [email body]
 
-LinkedIn InMail
+**LinkedIn InMail**
 [inmail body]
 
 
 
-Save Trigger
+## Save Trigger
 
-save [company name]
+**save [company name]**
 
 Saves the company in two places at once with one click. Both happen together. Neither is optional.
 
-Save 1: Notion
+**Save 1: Notion**
 Logs to the Parker PM — Outreach Pipeline database in Notion.
 
-Save 2: Excel file (Cowork-ready)
+**Save 2: Excel file (Cowork-ready)**
 Creates or appends to outreach-pipeline.xlsx in /Users/jessicaparker/claudecowork/outputs/.
 If the file already exists, append a new row. Do not overwrite existing rows.
 This file is the source of truth for Cowork email processing.
 
-Fields saved to both destinations (same column order in xlsx):
+**Fields saved to both destinations (same column order in xlsx):**
 Company
 Website
 ICP Score
@@ -109,7 +109,7 @@ Cold Email Body
 LinkedIn InMail Body
 Date Saved (auto: today's date, YYYY-MM-DD)
 
-Excel file rules:
+**Excel file rules:**
 Sheet name: Outreach Pipeline
 Row 1: Bold header row with column names above
 Freeze row 1
@@ -117,14 +117,14 @@ Column widths: auto-fit to content, minimum 15 characters wide
 No formulas needed. Plain data only.
 After saving, present the file so it is downloadable.
 
-After both saves complete, confirm:
+**After both saves complete, confirm:**
 Saved to Notion and outreach-pipeline.xlsx — [Company Name] added.
 
+___
 
+## Jessica's ICP (What the Score Is Based On)
 
-Jessica's ICP (What the Score Is Based On)
-
-Target companies:
+**Target companies:**
 Early-to-mid-stage health tech (Series A/B/C)
 Patient-facing products: enrollment flows, prior auth, onboarding, telehealth, pharmacy, EHR, clinical workflow tools
 Signs of product chaos: failed launch, HIPAA gaps, patient abandonment, broken agile, post-acquisition confusion, scope churn, manual processes that keep failing
@@ -133,7 +133,7 @@ AI-first or AI-enabled health tech is a strong positive signal
 
 
 
-Email and InMail Voice Rules
+**Email and InMail Voice Rules**
 
 Jessica's voice is strict and applies to all outreach drafts.
 
@@ -147,14 +147,14 @@ Banned closers: "Looking forward to hearing from you" / "Don't hesitate to reach
 
 No em dashes. No semicolons. No fake urgency.
 
-Email structure (5-8 sentences, mobile screen length):
+**Email structure (5-8 sentences, mobile screen length):**
 Specific true observation about their situation
 Name the problem that creates
 What Jessica does and why it is relevant
 One small ask
 Stop
 
-InMail structure (3-5 sentences, shorter than email):
+**InMail structure (3-5 sentences, shorter than email):**
 Specific observation
 Problem or gap
 Who Jessica is
@@ -163,7 +163,7 @@ Stop
 
 
 
-Notion Database
+## Notion Database
 
 Database: Parker PM — Outreach Pipeline
 Location: Freelance Business Hub

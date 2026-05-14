@@ -1,12 +1,12 @@
-Product Decision Log: Parker PM Outreach Tool
+## Product Decision Log: Parker PM Outreach Agent
 
 Built by: Jessica Parker  
 Type: Personal tool / fractional practice operations  
 Status: Shipped. In active use. Automation iterations in progress.
 
+___
 
-
-What It Is
+## What It Is
 
 A semi-automated outreach research and drafting agent built for a fractional product management practice. The user inputs one or more company names or URLs. The tool researches each company in parallel, scores fit against a defined ideal client profile, identifies the best outreach contact, and drafts a personalized cold email and LinkedIn InMail for each. Results are reviewed by the user. Approved companies are saved to Notion and an Excel file with a single save command.
 
@@ -14,9 +14,9 @@ The tool runs on the Claude API using batched sub-agents. It connects to Notion 
 
 The user is me.
 
+___
 
-
-Why I Built It
+## Why I Built It
 
 Fractional and consulting PM work is new territory. The work itself is not new. Finding clients is. Sales does not come from the same instincts as product management, and outreach at any volume requires research, personalization, and consistency across every company you contact.
 
@@ -24,11 +24,11 @@ The manual version of this process is not sustainable. Researching a company, fi
 
 The tool exists to compress that investment without sacrificing the personalization that makes outreach worth sending.
 
+___
 
+## Constraint-Driven Decisions
 
-Constraint-Driven Decisions
-
-Single input, parallel output
+**Single input, parallel output**
 
 The first iteration researched one company at a time and waited for each to complete before starting the next. That worked but it was slow. The user experience was sequential when the underlying task was parallelizable.
 
@@ -36,13 +36,13 @@ The second iteration deployed sub-agents to research multiple companies simultan
 
 Three is not a permanent number. It is the right starting point for testing. Batch size is a candidate for future iteration once the tool has more usage data.
 
-Output structure designed upfront
+**Output structure designed upfront**
 
 The output format was not discovered through iteration. It was designed before the first build: ICP score, research summary, product signals, contact details, cold email, LinkedIn InMail, all per company.
 
 The reasoning was straightforward. Outreach requires both email and LinkedIn depending on the contact's presence and preference. Designing for both from the start avoided rebuilding the output structure later. The ICP signal checklist was added to make the scoring transparent, not just a number. A score of 7 means more when you can see which signals drove it.
 
-Two save destinations, one command
+**Two save destinations, one command**
 
 Approved companies save to two places simultaneously: Notion and an Excel file. The save trigger is a single command. Neither destination is optional.
 
@@ -52,7 +52,7 @@ The Excel file is the automation layer. It is structured specifically for Cowork
 
 The two destinations serve different purposes. Notion is for the PM managing the practice. Excel is for the system that will eventually run without the PM in the loop.
 
-Manual input over automated scraping
+**Manual input over automated scraping**
 
 The tool requires manual company input. The alternative was automated scraping: pulling potential clients from web sources, job boards, or funding databases without human input.
 
@@ -60,7 +60,7 @@ Automated scraping was evaluated and rejected at this stage for two reasons. Fir
 
 A future iteration will use job board connectors to surface potential clients from relevant postings. That enhancement is staged after the current validation phase is complete.
 
-Human review gate before every automation step
+**Human review gate before every automation step**
 
 This is the most deliberate structural decision in the build.
 
@@ -74,36 +74,36 @@ Each phase of automation in this tool has to earn the right to run without a hum
 
 This is how I build any product. You do not hand off a step to automation until you understand exactly what it does and what it gets wrong.
 
+___
 
-
-What Broke in Actual Use
+## What Broke in Actual Use
 
 The Excel file dropped to the wrong location. Cowork is configured to read from a specific file path. The first version of the tool wrote the Excel file to a different location. The save completed successfully but the file was not where Cowork expected it. This is a plumbing issue, not a logic issue, and it is on the fix list before automated email sending is enabled.
 
 Automated scraping hit a cost wall. The first instinct was to pull potential clients automatically from web sources. That required APIs with usage costs that were not justified at this stage of the tool's development. Manual input is the right call for now and is free. The limitation is accepted deliberately.
 
+___
 
+## What I Would Build Next and Why
 
-What I Would Build Next and Why
-
-Validate and recalibrate the ICP scoring  
+**Validate and recalibrate the ICP scoring**
 The current scoring returns a 1-10 fit score. Companies above 5 move forward. That threshold is a starting assumption, not a validated number. The next iteration will review scored companies against real outreach outcomes to determine whether the model is identifying the right targets. Scoring recalibration happens before any further automation.
 
-Automated email sending via Cowork  
+**Automated email sending via Cowork**
 The Excel output is already structured for this. The trigger is not readiness of the technology. It is confidence in the scoring. When the ICP model has been validated against enough real companies, the email sending step gets automated. Not before.
 
-Fix the Excel file path  
+**Fix the Excel file path** 
 Small fix, high priority. The file needs to land where Cowork expects it before automated sending is enabled.
 
-Job board connectors for automated company sourcing  
+**Job board connectors for automated company sourcing**  
 Claude has connectors for job boards that could surface potential clients from relevant postings without manual input. This enhancement is staged after the scoring validation phase is complete. Automating the input pipeline before the scoring model is calibrated would compound any errors.
 
-Batch size tuning  
+**Batch size tuning**
 Three companies per batch is the starting point. With more usage data, the right batch size becomes knowable. This is a low-priority tuning item until the core workflow is validated.
 
+___
 
-
-What This Is Actually About
+## What This Is Actually About
 
 Every decision in this tool follows the same principle: automate one step at a time, validate before moving to the next, and keep a human in the loop until the system has earned the right to run without one.
 

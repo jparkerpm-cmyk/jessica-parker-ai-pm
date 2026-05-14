@@ -4,4 +4,4 @@ A browser-based workout tracker built for a treadmill desk. Single HTML file, no
 
 Built to solve a specific workflow problem: eliminating the pre-session decisions that break routines before they start.
 
-[Live tool](https://claude.ai/public/artifacts/f4637fa1-86b8-499b-a683-68ba5047c889)
+[Live tool](https://claude.ai/public/artifacts/f4637fa1-86b8-499b-a683-68ba5047c889) | [Decision log](https://github.com/jparkerpm-cmyk/jessica-parker-ai-pm/edit/main/walking-pad-workout-tool/README.md#:~:text=pad%2Dworkout%2Dtool-,decisions,-.md)

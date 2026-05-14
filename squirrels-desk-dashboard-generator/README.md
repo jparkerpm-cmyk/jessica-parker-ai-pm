@@ -1,4 +1,6 @@
 # Squirrel's Desk
+Built by: Stephanie Wnetrzak & Jessica Parker
+
 
 A daily planning tool that pulls from three sources: the previous day's Obsidian 
 debrief, the week's Google Calendar events, and the current Todoist task list.

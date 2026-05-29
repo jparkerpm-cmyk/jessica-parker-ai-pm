@@ -19,13 +19,13 @@ Runtime: Any conversation. No session dependency. Re-fetches everything fresh on
 
 ## Version History and Decisions
 
-### V1 — Created Squirrel's Desk
+### V1 — Original Build (Stephanie Wmetrzak PM)
 
 **What was built:** Morning briefing that surfaces what matters. Plan My Day locks the plan and generates the HTML file.
 
-**Decision:** Build the briefing before the debrief. The morning artifact is what lives in the browser all day and drives behavior. Start there.
+**Built by:** Stephanie Wnetrzak. This is the foundation all subsequent versions iterated on.
 
-**Constraint established:** Plan My Day can run in any conversation, any time, because it always re-fetches fresh from Obsidian. Nothing depends on being in the same session as the morning briefing.
+**Constraint established in V1:** Plan My Day can run in any conversation, any time, because it always re-fetches fresh from Obsidian. Nothing depends on being in the same session as the morning briefing.
 
 ---
 
@@ -69,21 +69,21 @@ Runtime: Any conversation. No session dependency. Re-fetches everything fresh on
 
 **Decisions made:**
 
-Non-linear layout. The screen is two-dimensional. Use it. Components arranged spatially, not in a vertical stack.
+- Non-linear layout. The screen is two-dimensional. Use it. Components arranged spatially, not in a vertical stack.
 
-Color added. Visual differentiation between sections without reading the labels.
+- Color added. Visual differentiation between sections without reading the labels.
 
-Linked task items, emails, and calendar items. One click to the source. No searching.
+- Linked task items, emails, and calendar items. One click to the source. No searching.
 
-Calendar view embedded. The day's shape visible in the artifact, not in a separate tab.
+- Calendar view embedded. The day's shape visible in the artifact, not in a separate tab.
 
-"The One Thing" redesigned. Removed header styling. Made it visually distinct as the single priority, not a section title.
+- "The One Thing" redesigned. Removed header styling. Made it visually distinct as the single priority, not a section title.
 
-"Send to Debrief" button fixed. Broken in prior versions. Fixed in V5.
+- "Send to Debrief" button fixed. Broken in prior versions. Fixed in V5.
 
-Title added: Squirrel's Desk. The window has an identity.
+- Title added: Squirrel's Desk. The window has an identity.
 
-Whimsical board removed. No longer needed. The HTML artifact absorbed what it was providing.
+- Whimsical board removed. No longer needed. The HTML artifact absorbed what it was providing.
 
 **Principle behind V5:** Cognitive load reduction is a design constraint, not a preference. Every friction point in a daily-use tool is a compounding tax. V5 treated the ADHD and dyslexic brain as the primary user, not an edge case.
 

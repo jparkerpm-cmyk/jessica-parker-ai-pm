@@ -110,6 +110,23 @@ Saving to both means losing one does not lose the data. It also means the rubric
 
 The trade-off: writes have to stay in sync. If a status update goes to one but not the other, the data drifts. The skill writes to both on every save and every outcome update.
 
+## Why a tiered salary signal hierarchy
+
+Earlier versions of Step 4 told the skill to "cross-check Levels.fyi, Glassdoor, and Built In." Three sources treated as peers, no priority, no confidence indicator. The output was noise dressed as research.
+
+The replacement walks four tiers in order, stopping at the highest tier with usable data. Each tier carries an explicit confidence level. Every output is tagged with the tier that produced it so the user knows whether the number is decision-grade or fallback.
+
+- Tier 1: Posted range in the JD. Authoritative.
+- Tier 2: Verified comp data (Levels.fyi, H1B/PERM disclosures, founder statements). High confidence.
+- Tier 3: Curated aggregators (Built In, industry comp reports). Medium confidence.
+- Tier 4: Self-reported aggregators (Glassdoor, Comparably, Payscale). Low confidence. Fallback only.
+
+A $185k-$220k from a posted range is decision-grade. The same number from Glassdoor with three data points is not. Treating them as equal data produces wrong decisions.
+
+Every signal is also compared against the Target Compensation Band defined at the top of the skill. The output explicitly notes in band, below band, or above band.
+
+Future enhancement: a Tier 5 that compares the signal against the user's own accumulated pipeline data. After 30+ evaluated postings at similar stage and role level, the pipeline becomes the most accurate benchmark for what the target market is actually paying. Not yet built.
+
 ## What this does not do
 
 Honesty about scope:
@@ -139,8 +156,6 @@ The system works. Here is what is on deck to make it work better.
 ### Near-term
 
 Low effort, immediate quality improvement.
-
-**Salary signal hierarchy.** Public aggregators (Levels, Glassdoor, Built In) are treated as peers in the current Step 4. They are not peers. Posted ranges should rank above founder interviews above public aggregators above the user's accumulated dataset of evaluated postings. Replace the parallel-search pattern with a ranked-source pattern.
 
 **Interview question ranking.** Step 6 produces six tailored questions per Pursue. The lowest-confidence scoring dimension should drive question order. If ownership scored 5/10 because the JD was ambiguous, the ownership question leads. The other five trail.
 

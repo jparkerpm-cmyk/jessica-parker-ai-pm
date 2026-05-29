@@ -35,6 +35,16 @@ Every save stamps this version into the Rubric Version field of the saved row. T
 
 
 
+Target Compensation Band
+
+Base: [your target base salary range]
+Total Comp (with equity): [your target total compensation]
+Location: [your location and remote preferences]
+
+Reference for "in band" vs "below band" vs "above band" comparisons in Step 4 salary signal. Update when your negotiating leverage changes or the market shifts.
+
+
+
 Reference Files
 
 These files customize the skill to a specific user. Replace with your own.
@@ -169,7 +179,26 @@ Stage: funding round, total raised, headcount range, year founded
 Leadership: CEO, Head of Product, CTO backgrounds (clinical, technical, sales, or other)
 AI signal: is AI in the product or internal tooling? Quote evidence from site, blog, or recent news.
 Recent activity: launches, hires, funding, layoffs in the last 12 months
-Salary signal: cross-check Levels.fyi, Glassdoor, and Built In for the role and location band
+Salary signal: walk the tiered hierarchy below. Stop at the highest tier with usable data. Tag every output with the tier that produced it.
+
+Tier 1 (authoritative, confidence: high)
+Posted range in the JD itself. Extract verbatim. If present, this is the answer. Stop.
+
+Tier 2 (verified, confidence: high)
+Verified compensation data. Search in parallel:
+- Levels.fyi for this exact company
+- H1B/PERM disclosures via h1bdata.info or similar (relevant for visa-sponsoring companies only)
+- Direct founder or leadership statements about comp philosophy from blogs, podcasts, or interviews in the last 12 months
+
+Tier 3 (curated, confidence: medium)
+Built In salary data if the company is in their database. Industry-specific compensation reports.
+
+Tier 4 (self-reported, confidence: low)
+Glassdoor, Comparably, Payscale. Use only when Tiers 1-3 surface nothing. Tag the output explicitly as Tier 4.
+
+If no tier surfaces usable data: output "No reliable salary signal available" and flag for interview-stage clarification.
+
+Cross-reference the signal against the Target Compensation Band defined at the top of this skill. Note explicitly: in band, below band, or above band.
 Stability flags: recent restructures, leadership churn, mass layoffs
 
 If company research surfaces a blocker (sales-founder running product, mass layoffs in last 6 months, no AI in product despite the title), the score may drop below threshold. Adjust recommendation accordingly.
@@ -268,7 +297,10 @@ Company Research
   Leadership: [CEO background] | [Head of Product background] | [CTO background]
   AI Signal: [Product / Tool / Unclear] — [evidence]
   Recent activity: [funding, launches, hires, news]
-  Salary signal: [Levels/Glassdoor/Built In range] vs JD posted range [if present]
+  Compensation Research:
+    Posted in JD: [range or "not posted"]
+    Best External Signal: [source] [range] (Tier [n], [High/Medium/Low confidence])
+    Vs target band: [in band / below band / above band]
   Stability: [flags or none]
 
 Experience Match

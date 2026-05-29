@@ -1,76 +1,143 @@
-# Squirrel's Desk
+# jd-triage
 
-A daily briefing and planning system built on Claude. It reads from four live sources, makes routing and prioritization decisions, generates an HTML artifact that lives in the browser all day, and writes back to the source of truth.
+A Claude skill that triages job descriptions against an opinionated criteria framework, scores them, researches the company, and recommends pursue, conditional, or skip. Built for senior product manager job searches in health tech and clinical AI.
 
-Runs every morning. No manual input required.
+The clinical metaphor is deliberate. Stop list maps to contraindications. Green flags map to positive indications. The four-dimension scoring is the differential. Pursue, Conditional, and Skip are the disposition. Phased file loading is escalating workup only when warranted.
 
----
+## TL;DR
 
-## What It Does
+- Inputs: a JD (text, URL, or file)
+- Output: a scored evaluation with company research, experience match, and tailored interview questions
+- Storage: writes to Notion and Excel for trend analysis over time
+- Instrumentation: rubric is versioned, outcomes are tracked, system is falsifiable
+- Status: working tool, used in active job search
+- Tuning: opinionated to one user. Fork and adapt.
 
-**Morning briefing.** Reads from Obsidian, Todoist, Google Calendar, and Gmail. Surfaces what matters. Flags what moved overnight.
+## The problem
 
-**Plan My Day.** Locks the day's priorities. Generates the HTML briefing file. Writes the plan back to Obsidian.
+The JD search process for a senior PM in 2026 looks like this:
 
-**HTML artifact.** Lives in a browser tab. Non-linear layout. Linked tasks, emails, and calendar items. Embedded calendar view. One-click access to every item surfaced in the briefing. This is the runtime environment for the day.
+- Read postings written by HR who do not know what a PM does
+- Apply to "Senior PM" roles. Realize on the first call they are implementation.
+- Spend an hour researching a company that ghosts you
+- Forget what you decided about the role you saw last Tuesday
 
-**Write-back.** The activity log posts to the Obsidian daily debrief note. Claude's memory is not the source of truth. Obsidian is.
+This tool fixes that. It triages JDs against a framework built around what matters: who owns the product, how decisions get made, what the work looks like in practice, what kind of leadership runs the building.
 
----
+It triages opportunities and learns from your pipeline over time. Use it before you apply.
 
-## Architecture
+## What it does
 
-| Layer | Detail |
-| Input sources | Obsidian, Todoist, Google Calendar, Gmail |
-| Output destinations | HTML briefing file, Obsidian (write-back), Slack |
-| Source of truth | Obsidian |
-| Runtime dependency | None. Re-fetches everything fresh on each run. |
-| Session dependency | None. Plan My Day runs in any conversation, any time. 
+Two flows.
 
----     
-## Design Constraints
+**Single JD triage.** Paste a JD, get back a Pursue, Conditional, or Skip recommendation with scoring, company research, experience match, and tailored interview questions.
 
-Cognitive load reduction is a first-class design constraint. This system is built for a picture-based, ADHD brain. Every design decision is evaluated against one question: does this add friction to a daily-use tool?
+**Job search.** Search Indeed, Dice, and ZipRecruiter for matching roles, filter, and evaluate the top candidates.
 
-Non-linear layout. The screen is two-dimensional. The artifact uses it.
+Both flows save results to Notion and Excel for downstream review.
 
-Color for visual differentiation. No reading the label to know what section you are in.
+## How the triage works
 
-Linked items. One click to the source. No searching.
+```mermaid
+flowchart TD
+    A[JD Input] --> B{Step 1: Stop List<br/>7 hard stops}
+    B -->|One hit| T1[Tier 1: STOP<br/>3 lines]
+    B -->|Passes| C{Step 2: Green Flags<br/>8 signals}
+    C -->|Under 3| T2[Tier 2: Skip<br/>5 lines]
+    C -->|3 or more| D{Step 3: Score<br/>4 dimensions, 1-10 each}
+    D -->|Total under 20| T2
+    D -->|Total 20-40| E[Step 4: Company Research]
+    E --> F{Score 24+?}
+    F -->|No| T3[Tier 3: Skip with Scores]
+    F -->|Yes| G[Step 5: Experience Match]
+    G --> H[Step 6: Interview Questions]
+    H --> I[Step 7: Recommendation]
+    I --> T4[Tier 4: Pursue or Conditional<br/>full report]
+```
 
-No scrolling to find the plan. The artifact is in a browser tab. It is always there.
+Six steps, each with an exit condition. Output tier scales with depth. A hard stop produces three lines. A full Pursue produces the full report.
 
----
+The four scoring dimensions are Ownership, Process, Leadership, and Work. Each scored 1 to 10 against anchored definitions in the skill. Total is x/40. Threshold for full evaluation is 24. Threshold for Pursue is 30.
 
-## Version History
+## What gets tracked
 
-| Version | Change |
-| V1 | Built by Stephanie Wnetrzak PM. Morning briefing and Plan My Day. Foundation for all versions. |
-| V2 | Added Gmail as a first-class input source. |
-| V3 | Added the HTML artifact. Plan lives in a browser tab, not a thread. |
-| V4 | Added Whimsical board. Served as a UX prototype for V5. Removed after. |
-| V5 | Full UX redesign. Non-linear layout. Color. Linked items. Embedded calendar. Fixed Send to Debrief. Removed Whimsical board. |
+Every evaluation saves to Notion and Excel with:
 
----
+- Scores, recommendation, reasoning
+- Company research: stage, leadership, AI signal, stability flags
+- Tailored interview questions
+- The rubric version that scored it
+- The application outcome lifecycle: Not applied → Applied → Phone screen → Interview → Offer → terminal state
 
-## MCP Connections Required
+The rubric is versioned. Every evaluation stays attributable to the criteria that scored it. After enough data, the system can ask which scoring dimension predicts conversion to interview, offer, or acceptance.
 
-- Obsidian
-- Todoist
-- Google Calendar
-- Gmail
-- Slack (debrief write-back)
-- Whimsical (prior versions; removed in V5)
+See [DECISIONS.md](DECISIONS.md) for the design rationale.
 
----
+## Setup
 
-## Obsidian Is Notes Only
+Requires:
 
-No skill files. No templates. No structural documents live in Obsidian. Only debrief notes, the active plan, cadence tracking, and ideas that came from real work.
+- Claude with skills feature enabled
+- Notion connector with a database for the pipeline
+- Excel access for local backup
 
----
+Steps:
 
-## Built By
+1. Copy `SKILL.md` into your Claude app's skill editor.
+2. Replace the criteria with your own (stop list, green flags, scoring rubric, banned words).
+3. Update file path references for your local setup.
+4. Set up the Notion database. Property schema is documented in `SKILL.md`.
+5. Drop `job-search-pipeline.xlsx` into your outputs folder.
+6. Update `RUBRIC_VERSION` at the top of the skill to today's date.
 
-Jessica Parker, BSN, RN. Senior Product Manager. Clinical, technical, and product across 16 years. Site: jparkerpm.com.
+## Use
 
+In Claude chat:
+
+```
+evaluate jd [paste JD text or URL]
+```
+
+After the evaluation, save it:
+
+```
+save [company name]
+```
+
+Track outcomes as they happen:
+
+```
+outcome [company] applied
+update [company] phone screen
+outcome [company] rejected
+```
+
+Run a multi-platform search:
+
+```
+search jobs
+```
+
+## Status
+
+This is a personal tool I use daily in my own job search. It is opinionated to my profile (senior PM, health tech, clinical AI, remote, no direct reports). The criteria, voice rules, and scoring rubric reflect my own preferences.
+
+If you want to use it, fork it and tune the criteria to yourself. The architecture is general. The opinions are mine.
+
+A general-purpose version with a separated engine and profile-building onboarding is on the roadmap. See [DECISIONS.md](DECISIONS.md) for the rationale.
+
+## What's in the repo
+
+- `SKILL.md` — the skill itself, ready to paste into the Claude app
+- `DECISIONS.md` — why the skill is built the way it is
+- `job-search-pipeline.xlsx` — Excel template for the pipeline
+- `README.md` — this file
+- `LICENSE` — MIT
+
+## License
+
+MIT. Build on this.
+
+## Author
+
+Jessica Parker, BSN, RN. Senior Product Manager. Clinical, technical, and product across 16 years. Site: [jparkerpm.com](https://jparkerpm.com).

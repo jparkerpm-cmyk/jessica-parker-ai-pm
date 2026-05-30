@@ -1,6 +1,11 @@
-# JD Triage (Public Reference Version)
+---
+name: jd-triage
+description: "Triages job descriptions against inlined criteria. Stop list, four-dimension scoring, company research, recommendation (pursue, conditional, or skip). Searches Indeed, Dice, ZipRecruiter, Hiring Cafe, and Wellfound for new postings. Tracks application outcomes over time."
+---
 
-## About this version
+JD Triage (Public Reference Version)
+
+About this version
 
 This is a sanitized public reference of the skill. The criteria, file paths, and voice rules below are working examples from one user's setup. Replace with your own when forking.
 
@@ -10,7 +15,7 @@ What to replace: the stop list, green flags, scoring rubric anchors, banned word
 
 
 
-## Trigger Phrases
+Trigger Phrases
 
 - evaluate jd [text, URL, or filename]
 - jd [text, URL, or filename]
@@ -20,7 +25,7 @@ If a URL is provided, fetch the page first. If a file is attached, read it. If t
 
 
 
-## Rubric Version
+Rubric Version
 
 RUBRIC_VERSION: 2026.05.28
 
@@ -30,31 +35,36 @@ Every save stamps this version into the Rubric Version field of the saved row. T
 
 
 
-## Target Compensation Band
+Target Compensation Band
 
-- Base: [your target base salary range]
-- Total Comp (with equity): [your target total compensation]
-- Location: [your location and remote preferences]
+Base: [your target base salary range]
+Total Comp (with equity): [your target total compensation]
+Location: [your location and remote preferences]
 
 Reference for "in band" vs "below band" vs "above band" comparisons in Step 4 salary signal. Update when your negotiating leverage changes or the market shifts.
 
 
 
-## Reference Files
+Reference Files
 
 These files customize the skill to a specific user. Replace with your own.
 
-| File | Purpose |
-| style-guide.md | Voice rules for any drafted output |
-| resume.pdf | Polished resume. Map JD requirements to your actual experience. |
-| cv.md | Full career history. Use when the JD calls for something the polished resume cut for length. |
-| profile.md | Working profile. Context on how you operate and what a good work environment looks like for you. |
+File
+Purpose
+style-guide.md
+Voice rules for any drafted output
+resume.pdf
+Polished resume. Map JD requirements to your actual experience.
+cv.md
+Full career history. Use when the JD calls for something the polished resume cut for length.
+profile.md
+Working profile. Context on how you operate and what a good work environment looks like for you.
 
 Update paths to match your local setup. The skill expects these files to exist at the documented location. If any file is missing at the expected path, stop and tell the user which one before proceeding.
 
 
 
-## Two-Phase Loading
+Two-Phase Loading
 
 Phase 0 — zero file reads.
 The stop list and green flags are inlined. Run both against the JD text before opening any file. A hard stop or a green flag fail exits here with no file I/O.
@@ -73,7 +83,7 @@ Session cache rule: if these were already read earlier in this session, do not r
 
 
 
-### Step 1 — Stop List (Phase 0, no file reads)
+Step 1 — Stop List (Phase 0, no file reads)
 
 These are example stop list items. Replace with your own deal-breakers when forking.
 
@@ -98,7 +108,7 @@ Do not score. Do not research. Do not read any files.
 
 
 
-### Step 2 — Green Flag Count (Phase 0, no file reads)
+Step 2 — Green Flag Count (Phase 0, no file reads)
 
 These are example green flags. Replace with your own positive signals when forking.
 
@@ -124,7 +134,7 @@ Do not score. Do not read any files.
 
 
 
-### Step 3 — Score the Four Dimensions (load style guide only)
+Step 3 — Score the Four Dimensions (load style guide only)
 
 These anchor definitions are tuned to a senior product manager. Adjust the dimension definitions to match the role level and discipline you are evaluating for.
 
@@ -161,7 +171,7 @@ Do not run company research, experience match, or interview questions.
 
 
 
-### Step 4 — Company Research (web searches, no new file reads)
+Step 4 — Company Research (web searches, no new file reads)
 
 Run only if score ≥ 20. Run all searches in parallel:
 
@@ -176,9 +186,9 @@ Posted range in the JD itself. Extract verbatim. If present, this is the answer.
 
 Tier 2 (verified, confidence: high)
 Verified compensation data. Search in parallel:
-Levels.fyi for this exact company
-H1B/PERM disclosures via h1bdata.info or similar (relevant for visa-sponsoring companies only)
-Direct founder or leadership statements about comp philosophy from blogs, podcasts, or interviews in the last 12 months
+- Levels.fyi for this exact company
+- H1B/PERM disclosures via h1bdata.info or similar (relevant for visa-sponsoring companies only)
+- Direct founder or leadership statements about comp philosophy from blogs, podcasts, or interviews in the last 12 months
 
 Tier 3 (curated, confidence: medium)
 Built In salary data if the company is in their database. Industry-specific compensation reports.
@@ -195,7 +205,7 @@ If company research surfaces a blocker (sales-founder running product, mass layo
 
 
 
-### Step 5 — Experience Match (load resume + cv.md, score ≥ 24 only)
+Step 5 — Experience Match (load resume + cv.md, score ≥ 24 only)
 
 Cross-reference JD requirements against resume.pdf and cv.md:
 
@@ -205,7 +215,7 @@ Gaps: honest assessment; flag structural gaps (certification, specific industry,
 
 
 
-### Step 6 — Interview Questions (score ≥ 24 only)
+Step 6 — Interview Questions (score ≥ 24 only)
 
 These are example interview questions tuned to one user's priorities. Replace with questions that test what matters to you.
 
@@ -220,7 +230,7 @@ On AI: Is AI a product capability you are building or a tool your team uses inte
 
 
 
-### Step 7 — Recommendation
+Step 7 — Recommendation
 
 Three options. Pick one.
 
@@ -235,7 +245,7 @@ Stop list hit, < 3 green flags, total < 24, or company research surfaces a block
 
 
 
-## Tiered Output Format
+Tiered Output Format
 
 Output scales with how far the evaluation ran.
 
@@ -314,7 +324,7 @@ Recommendation
 
 
 
-## Save Trigger
+Save Trigger
 
 save [company name]
 
@@ -330,12 +340,12 @@ Fields (same column order in xlsx):
 Company | Role Title | JD URL or Source | Recommendation | Total Score | Ownership Score | Process Score | Leadership Score | Work Score | Stop List Result | Green Flag Count | Stage | Leadership Background | AI Signal | Salary Signal | JD Posted Salary | Stability Flags | Interview Questions (semicolon-separated) | Recommendation Reasoning | Rubric Version | Date Evaluated (YYYY-MM-DD) | Status (default: Not applied) | Status Date | Applied Date | Outcome Notes
 
 Field rules at save time:
-Rubric Version: auto-stamp from the RUBRIC_VERSION line at the top of this skill
-Date Evaluated: today's date in YYYY-MM-DD format
-Status: default "Not applied"
-Status Date: today's date (the date this status was set)
-Applied Date: blank at save time
-Outcome Notes: blank at save time
+- Rubric Version: auto-stamp from the RUBRIC_VERSION line at the top of this skill
+- Date Evaluated: today's date in YYYY-MM-DD format
+- Status: default "Not applied"
+- Status Date: today's date (the date this status was set)
+- Applied Date: blank at save time
+- Outcome Notes: blank at save time
 
 Excel rules: Sheet name: Job Search Pipeline. Row 1: bold, frozen. Column widths: auto-fit, minimum 15 characters. No formulas.
 
@@ -343,24 +353,24 @@ After both saves: Saved — [Company] – [Role] added to Notion and job-search-
 
 
 
-## Outcome Tracking
+Outcome Tracking
 
 Trigger phrases:
-outcome [company] [status]
-update [company] [status]
+- outcome [company] [status]
+- update [company] [status]
 
 Examples:
-outcome [Company] phone screen
-update [Company] rejected
-outcome [Company] offer accepted
+- outcome [Company] phone screen
+- update [Company] rejected
+- outcome [Company] offer accepted
 
 When triggered, find the existing row in both Notion and Excel by company name match. If multiple rows match (same company, different roles), prompt for which one before updating.
 
 Update these fields:
-Status: the new status
-Status Date: today's date in YYYY-MM-DD format
-Applied Date: today's date if Status was "Not applied" and is moving to any other status (set once, on first transition out of "Not applied")
-Outcome Notes: prompt for optional notes if not included in the trigger. Append to existing notes with a date prefix, never overwrite.
+- Status: the new status
+- Status Date: today's date in YYYY-MM-DD format
+- Applied Date: today's date if Status was "Not applied" and is moving to any other status (set once, on first transition out of "Not applied")
+- Outcome Notes: prompt for optional notes if not included in the trigger. Append to existing notes with a date prefix, never overwrite.
 
 Valid statuses:
 Not applied (default for new evaluations)
@@ -388,7 +398,7 @@ No evaluation found for [Company]. Did you mean a different company, or do you n
 
 
 
-## Voice Rules
+Voice Rules
 
 These rules are an example. Replace with the voice and banned words that match your own writing preferences.
 
@@ -402,7 +412,7 @@ No em dashes. No semicolons in prose. No hashtags. No asterisks in body copy. No
 
 
 
-## Job Search Function
+Job Search Function
 
 Trigger Phrases
 
@@ -418,7 +428,7 @@ Default keywords (if none provided): adjust to match your target role and indust
 
 
 
-### Step A — Search All Five Platforms (parallel)
+Step A — Search All Five Platforms (parallel)
 
 Indeed
 search: [keyword or default title]
@@ -450,7 +460,7 @@ Pull up to 10 results per platform. Deduplicate by company + role title. Cap at 
 
 
 
-### Step B — Fast Stop-List Filter (title + snippet only, no full JD fetch)
+Step B — Fast Stop-List Filter (title + snippet only, no full JD fetch)
 
 These are example fast-filter rules. Adjust the company exclusion list to match your domain and what you want to filter out.
 
@@ -466,13 +476,13 @@ Log each drop with reason.
 
 
 
-### Step B2 — Snippet Green Flag Pre-Filter
+Step B2 — Snippet Green Flag Pre-Filter
 
 Before fetching any full JD, scan the snippet for positive signal using the inlined green flag list. If a result shows 0 visible green signals and the company is unknown, skip the fetch. Log as No Signal.
 
 
 
-### Step C — Full JD Fetch + Stop List + Green Flag Count
+Step C — Full JD Fetch + Stop List + Green Flag Count
 
 Proxy note: job board redirect URLs (Indeed to.indeed.com, ZipRecruiter redirect URLs) are blocked. Use WebSearch to find the JD by company name + role title, then fetch from the company careers page or an aggregator (Ashby, Lever, Greenhouse, Himalayas, Ladders). If the JD cannot be surfaced, log as Fetch Blocked.
 
@@ -484,7 +494,7 @@ Then count green flags (Step 2 above):
 
 
 
-### Step D — Score + Triage (3+ green flags only)
+Step D — Score + Triage (3+ green flags only)
 
 Run scoring only first (Step 3 above — four dimensions) for all results that cleared Step C. No company research yet.
 
@@ -500,30 +510,27 @@ Run recommendation (Step 7)
 
 
 
-## Job Search Output Format
+Job Search Output Format
+
+Run all evaluations (Steps A through D including company research, experience match, and interview questions) to completion internally before outputting anything.
+
+Default output — summary table only:
 
 Job Search Run — [date] — Keywords: [terms]
 Platforms: Indeed, Dice, ZipRecruiter, Hiring Cafe, Wellfound
 Total unique: [n] | Fast-filtered: [n] | Full JD fetched: [n] | Advanced to full eval: [n]
-
-Quick Scan Table
-[Company] | [Role] | [Platform] | [Green Flags] | [Disposition]
-...
-
-Full Evaluations (ordered by total score, highest first)
-[Standard Tier 3 or Tier 4 output for each result that reached Step D]
-
-Results Summary Table
-After all full evaluations, output a summary table covering every result that reached Step D:
 
 Company | Role | Platform | Score | Recommendation | Salary | Top Reason
 [name] | [title] | [platform] | [x]/40 | Pursue / Conditional / Skip | [posted range or "no signal"] | [one clause]
 
 Order by score descending. Include all results that reached scoring, even those that scored below 24.
 
+On-demand full report:
+When the user says "show [company]" or "full report [company]", render the standard Tier 3 or Tier 4 output for that result. Do not re-run the evaluation — use what was already computed internally.
 
 
-## Save Search
+
+Save Search
 
 save search [keywords or "default"]
 
@@ -531,34 +538,34 @@ Saves all results that reached Step D to Notion and job-search-pipeline.xlsx usi
 
 
 
-### Notion Database
+Notion Database
 
 Database: Job Search Pipeline
 Location: prompt the user once if ID is not available, remember for session.
 
 Required Notion properties:
-Company (Title)
-Role Title (Text)
-JD URL or Source (URL or Text)
-Recommendation (Select: Pursue, Conditional, Skip)
-Total Score (Number)
-Ownership Score (Number)
-Process Score (Number)
-Leadership Score (Number)
-Work Score (Number)
-Stop List Result (Select: Passed, Failed)
-Green Flag Count (Number)
-Stage (Text)
-Leadership Background (Text)
-AI Signal (Select: Product, Tool, Unclear)
-Salary Signal (Text)
-JD Posted Salary (Text)
-Stability Flags (Text)
-Interview Questions (Text, long-form)
-Recommendation Reasoning (Text, long-form)
-Rubric Version (Text)
-Date Evaluated (Date)
-Status (Select: Not applied, Applied, Acknowledged, Phone screen, Interview, Final round, Offer, Offer accepted, Offer declined, Rejected, Ghosted, Withdrew, Filtered, Low Signal)
-Status Date (Date)
-Applied Date (Date)
-Outcome Notes (Text, long-form)
+- Company (Title)
+- Role Title (Text)
+- JD URL or Source (URL or Text)
+- Recommendation (Select: Pursue, Conditional, Skip)
+- Total Score (Number)
+- Ownership Score (Number)
+- Process Score (Number)
+- Leadership Score (Number)
+- Work Score (Number)
+- Stop List Result (Select: Passed, Failed)
+- Green Flag Count (Number)
+- Stage (Text)
+- Leadership Background (Text)
+- AI Signal (Select: Product, Tool, Unclear)
+- Salary Signal (Text)
+- JD Posted Salary (Text)
+- Stability Flags (Text)
+- Interview Questions (Text, long-form)
+- Recommendation Reasoning (Text, long-form)
+- Rubric Version (Text)
+- Date Evaluated (Date)
+- Status (Select: Not applied, Applied, Acknowledged, Phone screen, Interview, Final round, Offer, Offer accepted, Offer declined, Rejected, Ghosted, Withdrew, Filtered, Low Signal)
+- Status Date (Date)
+- Applied Date (Date)
+- Outcome Notes (Text, long-form)

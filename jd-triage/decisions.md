@@ -12,13 +12,13 @@ For something used daily and worth tuning over time, the skill form pays off wit
 
 ## Why inlined criteria, not an external file
 
-Earlier versions loaded a jd-reference.md file on every evaluation. Three problems:
+Earlier versions loaded a `jd-reference.md` file on every evaluation. Three problems:
 
 1. The criteria changed less often than the file got loaded. Every run paid the token cost.
 2. The file was the source of truth. The skill broke without it. Single point of failure.
 3. The split between "skill logic" and "criteria" was artificial. Criteria are part of the skill.
 
-Current state: criteria are inlined into the skill body. The external jd-reference.md exists as a versioned backup. It is not loaded at runtime.
+Current state: criteria are inlined into the skill body. The external `jd-reference.md` exists as a versioned backup. It is not loaded at runtime.
 
 Token cost savings: roughly 60% per evaluation run. More on skip-heavy days.
 
@@ -80,7 +80,7 @@ The rubric will change. Criteria get refined as you learn what matters.
 
 If the rubric changes mid-pipeline, you need to know which version scored which evaluation. Otherwise the outcome data is noise. You cannot tell whether Pursue calls converted because the rubric was calibrated or because the market was strong.
 
-Current state: RUBRIC_VERSION is a date stamp at the top of the skill. Every save stamps that version onto the row. When you change criteria, update the date.
+Current state: `RUBRIC_VERSION` is a date stamp at the top of the skill. Every save stamps that version onto the row. When you change criteria, update the date.
 
 This is the most underrated piece of the architecture. It looks small. It is what makes the rest of the instrumentation falsifiable.
 
@@ -121,7 +121,7 @@ The replacement walks four tiers in order, stopping at the highest tier with usa
 - Tier 3: Curated aggregators (Built In, industry comp reports). Medium confidence.
 - Tier 4: Self-reported aggregators (Glassdoor, Comparably, Payscale). Low confidence. Fallback only.
 
-A 185k-220k from a posted range is decision-grade. The same number from Glassdoor with three data points is not. Treating them as equal data produces wrong decisions.
+A $185k-$220k from a posted range is decision-grade. The same number from Glassdoor with three data points is not. Treating them as equal data produces wrong decisions.
 
 Every signal is also compared against the Target Compensation Band defined at the top of the skill. The output explicitly notes in band, below band, or above band.
 
@@ -153,7 +153,7 @@ The two are different products. The current form is a tool I use. The public for
 
 The system works. Here is what is on deck to make it work better.
 
-Near-term
+### Near-term
 
 Low effort, immediate quality improvement.
 
@@ -161,17 +161,19 @@ Low effort, immediate quality improvement.
 
 **Additional job board sources.** Hiring Cafe and Wellfound added to the multi-platform search in Step A. Both navigate directly to the site first; WebSearch is the fallback if direct parameters are unavailable. Same parallel-search pattern as Indeed, Dice, and ZipRecruiter. Domain filtering runs manually after retrieval. Default keyword set broadened from "clinical AI" to "healthcare" broadly to match the expanded search surface. Result cap raised from 25 to 35 to accommodate the two additional platforms. Platform-specific trigger phrases added so either site can be searched independently.
 
-**Outcome Notes overwrite trigger.** Current behavior appends with date prefix, never overwrites. If a typo needs fixing, no path. Build replace notes [company] [text] when the append-only behavior becomes a problem.
+**Outcome Notes overwrite trigger.** Current behavior appends with date prefix, never overwrites. If a typo needs fixing, no path. Build `replace notes [company] [text]` when the append-only behavior becomes a problem.
 
-## Why a results summary table
+## Why a results summary table with lazy detail loading
 
-The full evaluation output is thorough. It is also long. After reading five Tier 4 reports back to back, the decision of which role to apply to first requires holding too much in memory.
+The full evaluation output is thorough. It is also long. After reading five Tier 4 reports back to back, the decision of which role to pursue first requires holding too much in memory at once.
 
-The summary table collapses each result to one row: company, role, platform, score, recommendation, salary signal, and the single clause that most explains the score. It sits after the full evaluations so it does not replace detail, it follows it.
+The summary table collapses each result to one row: company, role, platform, score, recommendation, salary signal, and the single clause that most explains the score. It is the default output after a job search run. No full reports render unless requested.
 
-The table also makes salary visible at a glance across all results in one view. Comparing comp signals across five full reports is slow. One column solves that.
+Detail is on demand. When the user says "show [company]" or "full report [company]", the Tier 3 or Tier 4 output for that result renders from what was already computed internally. No re-evaluation. No additional API call.
 
-Results that reached scoring but fell below the Pursue threshold are included. A 22/40 that posted $220k is worth knowing about even if the score did not clear.
+This also dropped the Quick Scan Table that previously appeared before full evaluations. That table served as a pre-filter view before the detail wall. With detail suppressed by default, the pre-filter is redundant. The summary table does both jobs.
+
+Token impact: output tokens per job search run drop by roughly 4,000 to 5,000. Not the reason to make the change. The reason is that one table is a better reading experience than five full reports before you have decided what to read.
 
 ### Mid-term
 

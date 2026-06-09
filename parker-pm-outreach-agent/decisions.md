@@ -1,10 +1,10 @@
 ## Product Decision Log: Parker PM Outreach Agent
 
-Built by: Jessica Parker  
-Type: Personal tool / fractional practice operations  
+Built by: Jessica Parker
+Type: Personal tool / fractional practice operations
 Status: Shipped. In active use. Automation iterations in progress.
 
-___
+---
 
 ## What It Is
 
@@ -14,7 +14,7 @@ The tool runs on the Claude API using batched sub-agents. It connects to Notion 
 
 The user is me.
 
-___
+---
 
 ## Why I Built It
 
@@ -24,7 +24,7 @@ The manual version of this process is not sustainable. Researching a company, fi
 
 The tool exists to compress that investment without sacrificing the personalization that makes outreach worth sending.
 
-___
+---
 
 ## Constraint-Driven Decisions
 
@@ -74,7 +74,23 @@ Each phase of automation in this tool has to earn the right to run without a hum
 
 This is how I build any product. You do not hand off a step to automation until you understand exactly what it does and what it gets wrong.
 
-___
+**API-based contact lookup over web search**
+
+The first version of the tool found contacts through web search: scraping LinkedIn, company pages, and whatever public sources surfaced a name and title. The results were inconsistent. Confidence was low. Emails almost never appeared. The contact block was the weakest part of every output.
+
+The replacement is a two-API stack: Apollo for people discovery, Hunter.io for email resolution.
+
+Apollo's `organization_top_people` endpoint returns the most prominent people at a company by domain. For the companies in this ICP — early-to-mid-stage health tech with 50 to 200 employees — that list reliably surfaces the founder, CTO, and VP of Product. The tool filters by target titles in priority order and takes the best match.
+
+Apollo free tier does not include prospecting search across their full database. The `organization_top_people` endpoint is available on free and is the right tool for this use case. The goal is not to search millions of people. It is to find who runs product at a specific small company. Top people at the org is the right lens.
+
+Hunter.io fills the email gap. When Apollo returns a person without an email, Hunter's email finder takes the name and domain and returns the most likely address with a confidence score. When Apollo returns nothing, Hunter's domain search returns all addresses found for that domain, filtered by title.
+
+The combined stack produces a contact with a real email address in most cases. When it does not, the output says so explicitly rather than guessing.
+
+API keys are never stored in the skill file. They are prompted at runtime at the start of every outreach session. This was a deliberate security decision. A skill file that lives in a repo, gets shared, or ends up in a backup is a credential exposure risk if keys are hardcoded. Runtime prompt eliminates that risk. The keys exist only in the session.
+
+---
 
 ## What Broke in Actual Use
 
@@ -82,26 +98,31 @@ The Excel file dropped to the wrong location. Cowork is configured to read from 
 
 Automated scraping hit a cost wall. The first instinct was to pull potential clients automatically from web sources. That required APIs with usage costs that were not justified at this stage of the tool's development. Manual input is the right call for now and is free. The limitation is accepted deliberately.
 
-___
+Web search contact lookup did not produce reliable results. Names surfaced inconsistently. Emails almost never appeared. Confidence was low enough that the contact block added noise more than signal. The API-based replacement is covered in the decision above.
+
+---
 
 ## What I Would Build Next and Why
 
 **Validate and recalibrate the ICP scoring**
-The current scoring returns a 1-10 fit score. Companies above 5 move forward. That threshold is a starting assumption, not a validated number. The next iteration will review scored companies against real outreach outcomes to determine whether the model is identifying the right targets. Scoring recalibration happens before any further automation.
+The current scoring returns a 1–10 fit score. Companies above 5 move forward. That threshold is a starting assumption, not a validated number. The next iteration will review scored companies against real outreach outcomes to determine whether the model is identifying the right targets. Scoring recalibration happens before any further automation.
 
 **Automated email sending via Cowork**
 The Excel output is already structured for this. The trigger is not readiness of the technology. It is confidence in the scoring. When the ICP model has been validated against enough real companies, the email sending step gets automated. Not before.
 
-**Fix the Excel file path** 
+**Fix the Excel file path**
 Small fix, high priority. The file needs to land where Cowork expects it before automated sending is enabled.
 
-**Job board connectors for automated company sourcing**  
+**Job board connectors for automated company sourcing**
 Claude has connectors for job boards that could surface potential clients from relevant postings without manual input. This enhancement is staged after the scoring validation phase is complete. Automating the input pipeline before the scoring model is calibrated would compound any errors.
 
 **Batch size tuning**
 Three companies per batch is the starting point. With more usage data, the right batch size becomes knowable. This is a low-priority tuning item until the core workflow is validated.
 
-___
+**Apollo paid tier evaluation**
+The free tier `organization_top_people` endpoint covers the current use case well. If contact coverage gaps emerge at scale, the paid tier unlocks full prospecting search across Apollo's database. That evaluation is staged after the tool has enough usage data to know whether coverage is actually the constraint.
+
+---
 
 ## What This Is Actually About
 

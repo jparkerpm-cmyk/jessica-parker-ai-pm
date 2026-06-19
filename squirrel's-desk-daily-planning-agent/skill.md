@@ -12,19 +12,23 @@ Runs the daily briefing and planning ritual. Two parts: morning briefing and Pla
 Run at the start of the day, or any time you need to surface what matters right now.
 
 ### What It Reads
-- Obsidian: yesterday's debrief note, any carry-overs, active cadence items
+- Obsidian: yesterday's debrief note, carry-overs, active cadence items, ideas across three inbox files
 - Todoist: tasks due today, overdue items, high-priority items across active projects
-- Google Calendar: today's events, any conflicts or back-to-backs worth flagging
-- Gmail: unread threads from the last 24 hours, anything that changes today's priorities
+- Google Calendar: today's events plus the next 6 days
+- Gmail: action inbox (last 24 hours), newsletters (last 24 hours), training and docs (last 24 hours)
+- Weather: current conditions and today's forecast for Durham, CT
+- News: four categories — Local CT, National, Political, International
 
 ### What It Produces
 A synthesized briefing that surfaces:
 - The One Thing: single highest-priority action for today
 - Cadence items due: daily, weekly, biweekly, monthly, quarterly
 - Tasks for today (linked to Todoist)
-- Calendar events for today (linked)
-- Emails that need action (linked)
-- Anything that moved overnight
+- Calendar timeline for today and coming up for the next 6 days
+- Action inbox emails (real people, needs a response)
+- What today looks like: one synthesized paragraph across all inputs
+- Newsletters and training items for the consume zone
+- Today's news across four categories
 
 ### What It Does Not Do
 It does not lock the plan. That is Part 2.
@@ -43,14 +47,21 @@ After reviewing the briefing, or any time you are ready to lock the day.
 4. Writes the plan back to Obsidian
 
 ### HTML Artifact
-The artifact opens in a browser tab. Non-linear layout. Everything linked. Stays open all day.
+The artifact opens in a browser tab. Stays open all day.
 
-Contents:
-- The One Thing (visually distinct, not a header)
-- Task list with Todoist links
-- Email list with Gmail links
-- Calendar view for the day
-- Send to Debrief button
+**Layout order:**
+
+**Action zone** (green tinted background — the only colored zone):
+- Today's Tasks and Today's Plan side by side as two columns
+- Inbox Check: full-width horizontal row of action emails below the columns
+- What Today Looks Like: synthesis paragraph below inbox check
+
+**Neutral zones** (plain cards, labeled dividers):
+- Cadence: daily, weekly, biweekly, monthly rhythm tracking
+- Schedule: today's timeline + coming up (next 6 days)
+- Reading: From Your Inbox (newsletters, training) and Today's News
+- Reference: Carrying Over and Ideas to Come Back To
+- Activity Log and Send to Debrief
 
 ### Write-Back
 The plan and activity log post to the Obsidian daily debrief note for today.
@@ -71,10 +82,10 @@ The plan and activity log post to the Obsidian daily debrief note for today.
 
 | Tool | Use |
 |---|---|
-| Obsidian | Read debrief notes, cadence, carry-overs. Write back plan and activity log. |
-| Todoist | Read tasks due today, overdue, high-priority. |
-| Google Calendar | Read today's events. |
-| Gmail | Read unread threads from last 24 hours. |
+| Obsidian | Read debrief notes, cadence, carry-overs, ideas. Write back plan and activity log. |
+| Todoist | Read tasks due today, overdue, high-priority. Checkbox closes tasks via REST API. |
+| Google Calendar | Read today's events and next 6 days. |
+| Gmail | Read action inbox, newsletters, and training items from last 24 hours. |
 | Slack | Post debrief summary (debrief skill). |
 
 ---
@@ -91,8 +102,16 @@ The plan and activity log post to the Obsidian daily debrief note for today.
 
 Built for a picture-based, ADHD brain. Cognitive load reduction is the primary design constraint.
 
-The HTML artifact uses the full screen non-linearly. Color differentiates sections without requiring you to read labels. Every item is linked to its source. No searching required.
+Only the action zone gets a background color (soft green). Everything else is plain. Color does one job — signals where the work is — and gets out of the way.
 
-The Send to Debrief button on the artifact routes directly to the debrief skill. One click from the end of the day to the debrief.
+The weather strip gets its own color (soft blue). Distinct from the action zone. Reads immediately as context, not work.
 
-V5 removed the Whimsical board output. The HTML artifact absorbed the visual function it was serving. Fewer destinations, same coverage.
+The inbox check is a full-width horizontal row of email cards sitting directly below Tasks and Plan. Same position it always occupied as a third column — just horizontal now so the two work columns get full width.
+
+Every item is linked to its source. No searching required.
+
+The Send to Debrief button on the artifact routes directly to the debrief skill. One click from end of day to debrief.
+
+Task checkboxes close tasks in Todoist directly via REST API. No routing through an LLM. No fake DONE responses.
+
+Weather, news, newsletters, and training are all fetched by Claude at build time and injected as constants. Nothing in the HTML live-fetches them.

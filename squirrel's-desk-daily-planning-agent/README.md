@@ -4,7 +4,7 @@ A daily briefing and planning system built on Claude. It reads from six live sou
 
 Runs every morning. No manual input required.
 
-[Squirrel's Desk live demo](https://htmlpreview.github.io/?https://github.com/jparkerpm-cmyk/squirrels-desk-daily-planning-agent/blob/main/squirrels-desk-demo.html)
+[Squirrel's Desk live demo](https://htmlpreview.github.io/?https://github.com/jparkerpm-cmyk/jessica-parker-ai-pm/blob/main/squirrel%27s-desk-daily-planning-agent/squirrels-desk-demo.html)
 
 ---
 

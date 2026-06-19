@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐿️ Squirrel's Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#F3F0E8;--surface:#FDFCF8;--border:#DED9CE;--border-mid:#C5BFB0;
+  --text:#1C1A16;--text-2:#5A5650;--text-3:#9A9489;
+  --accent:#2A4F0E;--accent-bg:#EAF2E2;--accent-dark:#1a3509;
+  --warn:#8B3A10;--warn-bg:#FAF0EA;
+  --danger:#7A1C1C;--danger-bg:#FBEAEA;
+  --ok:#1a4a1a;--ok-bg:#e8f5e8;
+  --job:#1A4480;--job-bg:#EEF3FF;--job-border:#B8CBF5;
+  --frac:#5A1A8A;--frac-bg:#F5EEFF;--frac-border:#D5B8F5;
+  --work:#8A4A1A;--work-bg:#FFF2E8;--work-border:#F5CBA8;
+  --admin:#6A5A10;--admin-bg:#FFFBE8;--admin-border:#E8D88A;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5;padding:1.75rem 2rem 8rem;}
+.wrap{max-width:1160px;margin:0 auto;}
+
+/* header */
+.hdr{display:flex;align-items:baseline;gap:1.5rem;flex-wrap:wrap;margin-bottom:.75rem;}
+.hdr-title{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.1;}
+.hdr-date{font-size:18px;font-weight:700;}
+.hdr-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-3);margin-left:auto;line-height:1.6;}
+
+/* weather */
+.wx-strip{display:flex;align-items:center;gap:1rem;background:#EAF3FA;border-radius:8px;padding:.55rem 1rem;margin-bottom:.85rem;}
+.wx-temp{font-size:20px;font-weight:700;}
+.wx-note{font-size:12.5px;color:var(--text-2);margin-left:auto;}
+
+/* one thing */
+.one-thing{background:var(--accent);color:#fff;border-radius:12px;padding:1rem 1.75rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:1.1rem;}
+.one-thing-lbl{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;background:rgba(255,255,255,.2);padding:3px 10px;border-radius:5px;margin-bottom:.5rem;display:inline-block;}
+.one-thing-text{font-size:22px;font-weight:700;line-height:1.3;letter-spacing:-.01em;}
+
+/* zone treatments */
+.zone-action{background:#EEF5E8;border-radius:14px;padding:1.5rem;margin-bottom:2rem;}
+.zone-action-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:1.25rem;display:block;}
+.zone-action .card{background:#FDFCF8;box-shadow:0 1px 3px rgba(0,0,0,.06);border:none;}
+.zone{margin-bottom:2rem;}
+.zone-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-3);font-weight:500;margin-bottom:1rem;display:block;padding-bottom:.5rem;border-bottom:1px solid var(--border);}
+
+/* card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.35rem;}
+.mb{margin-bottom:1.5rem;}
+.mt{margin-top:1.25rem;}
+
+/* grids */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:0;align-items:start;}
+
+/* labels */
+.sec-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);font-weight:500;}
+.sec-hdr{display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem;}
+
+/* tracks */
+.track{margin-bottom:.9rem;}
+.track-hdr{display:flex;align-items:center;gap:.45rem;padding:.35rem .75rem;border-radius:6px;font-size:11.5px;font-weight:600;letter-spacing:.02em;margin-bottom:.4rem;}
+.track-hdr.job{background:var(--job-bg);color:var(--job);}
+.track-hdr.frac{background:var(--frac-bg);color:var(--frac);}
+.track-hdr.work{background:var(--work-bg);color:var(--work);}
+.track-hdr.admin{background:var(--admin-bg);color:var(--admin);}
+
+/* tasks */
+.task-row{display:flex;align-items:flex-start;gap:.65rem;padding:.38rem 0;border-bottom:.5px solid var(--border);}
+.task-row:last-child{border-bottom:none;padding-bottom:0;}
+.task-cb{width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;margin-top:1px;cursor:pointer;}
+.task-lbl{font-size:14px;line-height:1.45;}
+.task-lbl.done{text-decoration:line-through;color:var(--text-3);}
+.task-status{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-3);margin-left:.4rem;}
+.pill{font-family:'DM Mono',monospace;font-size:10px;padding:1px 6px;border-radius:3px;margin-left:.3rem;}
+.pill-d{background:var(--danger-bg);color:var(--danger);}
+.pill-w{background:var(--warn-bg);color:var(--warn);}
+.pill-r{background:var(--bg);color:var(--text-3);border:1px solid var(--border);}
+
+/* plan */
+.focus-row{display:flex;gap:.85rem;padding:.6rem 0;border-bottom:.5px solid var(--border);}
+.focus-row:last-of-type{border-bottom:none;}
+.focus-n{font-size:22px;font-weight:700;color:var(--border-mid);line-height:1;width:26px;text-align:right;flex-shrink:0;}
+.focus-name{font-size:14px;font-weight:600;line-height:1.3;margin-bottom:.2rem;}
+.focus-detail{font-size:12.5px;color:var(--text-2);line-height:1.5;margin-bottom:.35rem;}
+.focus-est{font-family:'DM Mono',monospace;font-size:10px;background:var(--accent-bg);color:var(--accent);padding:2px 8px;border-radius:4px;display:inline-block;}
+.not-today-lbl{margin-top:.6rem;font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-3);margin-bottom:.35rem;}
+.skip-row{font-size:13px;color:var(--text-2);text-decoration:line-through;}
+.intention{font-size:15px;font-weight:500;border-left:3px solid var(--accent);background:var(--accent-bg);border-radius:0 8px 8px 0;padding:.85rem 1.25rem;color:var(--accent-dark);margin-top:.75rem;line-height:1.5;}
+
+/* inbox cards */
+.inbox-cards{display:flex;flex-wrap:wrap;}
+.inbox-card{flex:1;min-width:200px;padding:.75rem 1rem;border-right:.5px solid var(--border);}
+.inbox-card:last-child{border-right:none;}
+.inbox-sender{font-size:14px;font-weight:500;color:var(--accent);text-decoration:none;display:block;}
+.inbox-addr{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-3);}
+.inbox-sub{font-size:13px;color:var(--text);margin-top:.2rem;}
+.inbox-snip{font-size:12px;color:var(--text-2);}
+.inbox-time{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-3);margin-top:.2rem;}
+
+/* synthesis */
+.synthesis{font-size:15px;line-height:1.65;color:var(--text-2);}
+
+/* cadence */
+.cadence-row{display:flex;align-items:baseline;gap:.75rem;padding:.35rem 0;border-bottom:.5px solid var(--border);}
+.cadence-row:last-child{border-bottom:none;}
+.cadence-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;min-width:200px;}
+.cadence-lbl.daily{color:var(--danger);}
+.cadence-lbl.weekly{color:var(--warn);}
+.cadence-lbl.biweekly{color:var(--admin);}
+.cadence-lbl.monthly{color:var(--frac);}
+.cadence-items{font-size:13.5px;color:var(--text-2);}
+
+/* timeline */
+.tl-wrap{overflow-x:auto;}
+.tl-hour-row{display:flex;border-bottom:1px solid var(--border);min-width:880px;}
+.tl-hour{width:80px;font-family:'DM Mono',monospace;font-size:10px;color:var(--text-3);padding:.25rem 0;}
+.tl-events{position:relative;height:60px;min-width:880px;}
+.tl-block{position:absolute;height:48px;top:6px;border-radius:7px;font-size:12px;font-weight:500;padding:.3rem .5rem;overflow:hidden;white-space:nowrap;}
+.tl-block.imp{background:var(--danger-bg);color:var(--danger);border:1px solid #E8BABA;}
+.tl-block.reg{background:var(--job-bg);color:var(--job);border:1px solid var(--job-border);}
+
+/* coming up */
+.cal-row{display:flex;align-items:center;gap:.75rem;padding:.45rem 0;border-bottom:.5px solid var(--border);font-size:14px;}
+.cal-row:last-child{border-bottom:none;}
+.cal-day{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-3);min-width:90px;text-transform:uppercase;}
+.cal-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.cal-dot.imp{background:var(--danger);}
+.cal-dot.reg{background:var(--border-mid);}
+.cal-time{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-3);margin-left:auto;}
+
+/* newsletters / training */
+.nl-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.mail-row{padding:.35rem 0;border-bottom:.5px solid var(--border);}
+.mail-row:last-child{border-bottom:none;}
+.mail-sub{font-size:13px;color:var(--text);font-weight:500;text-decoration:none;display:block;}
+.mail-sub:hover{text-decoration:underline;}
+.mail-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-3);margin-top:.1rem;}
+
+/* news */
+.news-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem 1.5rem;}
+.news-q-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem;}
+.news-dot{width:7px;height:7px;border-radius:50%;display:inline-block;}
+.news-q-lbl.local{color:var(--accent);} .news-dot.local{background:var(--accent);}
+.news-q-lbl.national{color:var(--job);} .news-dot.national{background:var(--job);}
+.news-q-lbl.political{color:var(--warn);} .news-dot.political{background:var(--warn);}
+.news-q-lbl.intl{color:var(--frac);} .news-dot.intl{background:var(--frac);}
+.news-headline{font-size:13px;line-height:1.4;padding:.25rem 0;border-bottom:.5px solid var(--border);}
+.news-headline:last-child{border-bottom:none;}
+.news-headline a{color:var(--text);text-decoration:none;}
+.news-headline a:hover{text-decoration:underline;}
+.news-src{color:var(--text-3);font-family:'DM Mono',monospace;font-size:10px;margin-left:.35rem;}
+
+/* reference */
+.list-row{display:flex;gap:.6rem;padding:.55rem 0;border-bottom:.5px solid var(--border);font-size:14px;}
+.list-row:last-child{border-bottom:none;}
+.idea-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;flex-shrink:0;}
+.idea-tag.fun{color:var(--frac);}
+.idea-tag.tooling{color:var(--job);}
+.idea-tag.waiting{color:var(--text-3);}
+
+hr.div{border:none;border-top:1px solid var(--border-mid);margin:2rem 0;}
+
+/* activity log */
+.log-input-row{display:flex;gap:.6rem;margin-bottom:.85rem;}
+.log-input{flex:1;font-family:'DM Sans',sans-serif;font-size:14px;padding:9px 12px;border:1px solid var(--border-mid);border-radius:7px;background:var(--bg);color:var(--text);outline:none;}
+.log-add-btn{background:var(--accent);color:white;border:none;border-radius:7px;font-size:14px;padding:9px 16px;cursor:pointer;}
+.log-entries{display:flex;flex-direction:column;}
+.log-entry{display:flex;align-items:baseline;gap:.6rem;padding:.45rem 0;border-top:.5px solid var(--border);}
+.log-ts{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-3);white-space:nowrap;}
+.log-type{font-family:'DM Mono',monospace;font-size:10px;padding:1px 5px;border-radius:3px;white-space:nowrap;}
+.log-type.note{background:var(--bg);color:var(--text-3);border:1px solid var(--border);}
+.log-type.task{background:var(--ok-bg);color:var(--ok);}
+.log-msg{font-size:13px;color:var(--text-2);}
+
+.debrief-btn{font-family:'DM Mono',monospace;font-size:12px;padding:10px 20px;border:1px solid var(--border-mid);border-radius:7px;background:var(--surface);color:var(--text-2);cursor:pointer;margin-top:.75rem;}
+.debrief-btn:hover{border-color:var(--warn);color:var(--warn);}
+
+/* demo banner */
+.demo-banner{background:#FFF3CD;border:1px solid #E8C97A;border-radius:8px;padding:.6rem 1rem;margin-bottom:1.25rem;font-family:'DM Mono',monospace;font-size:11px;color:#7A5800;text-align:center;letter-spacing:.05em;}
+
+footer{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-3);text-align:center;margin-top:3rem;}
+
+/* toast */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--text);color:var(--surface);font-family:'DM Mono',monospace;font-size:11px;padding:10px 16px;border-radius:6px;opacity:0;transition:opacity .2s;max-width:320px;pointer-events:none;z-index:999;}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="demo-banner">⚠ Demo file — all data is fictional. Built with Squirrel's Desk v8.</div>
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <span class="hdr-title">🐿️ Squirrel's Desk</span>
+    <span class="hdr-date">Wednesday, March 12, 2025</span>
+    <span class="hdr-sub">opened 7:58 am · debrief from Monday Mar 10</span>
+  </div>
+
+  <!-- WEATHER -->
+  <div class="wx-strip mb">
+    <span style="font-size:18px">🌤</span>
+    <span class="wx-temp">52°</span>
+    <span style="font-size:13px">Mostly sunny · H 61 / L 44 · Maplewood, CT</span>
+    <span class="wx-note">Good walking weather this morning. Rain returns Thursday.</span>
+  </div>
+
+  <!-- ONE THING -->
+  <div class="one-thing mb">
+    <span style="font-size:24px;opacity:.75">⚡</span>
+    <div>
+      <div class="one-thing-lbl">The One Thing</div>
+      <div class="one-thing-text">Product review — Meridian Health AI demo · 1:00 pm</div>
+    </div>
+  </div>
+
+  <!-- ACTION ZONE -->
+  <div class="zone-action">
+    <span class="zone-action-label">Action</span>
+
+    <div class="grid2">
+      <!-- TASKS -->
+      <div class="card">
+        <div class="sec-hdr"><span class="sec-lbl">Today's Tasks · 6 due</span></div>
+
+        <div class="track">
+          <div class="track-hdr job">🔵 Job Search</div>
+          <div class="task-row">
+            <input type="checkbox" class="task-cb" onchange="demoCheck(this, 'Applied to Northstar Health PM role')">
+            <span class="task-lbl">Apply to Northstar Health — PM role <span class="pill pill-d">urgent</span></span>
+          </div>
+          <div class="task-row">
+            <input type="checkbox" class="task-cb" onchange="demoCheck(this, 'Followed up with Holloway recruiter')">
+            <span class="task-lbl">Follow up with Holloway recruiter <span class="pill pill-w">overdue 3/10</span></span>
+          </div>
+        </div>
+
+        <div class="track">
+          <div class="track-hdr frac">🟣 Fractional</div>
+          <div class="task-row">
+            <input type="checkbox" class="task-cb" onchange="demoCheck(this, 'Sent Meridian AI engagement brief')">
+            <span class="task-lbl">Send Meridian AI engagement brief</span>
+          </div>
+          <div class="task-row">
+            <input type="checkbox" class="task-cb" onchange="demoCheck(this, 'Published LinkedIn outreach post')">
+            <span class="task-lbl">Publish LinkedIn outreach post</span>
+          </div>
+        </div>
+
+        <div class="track">
+          <div class="track-hdr work">🟤 Work / Helix</div>
+          <div class="task-row">
+            <input type="checkbox" class="task-cb" onchange="demoCheck(this, 'Reviewed Helix sprint retro notes')">
+            <span class="task-lbl">Review sprint retro notes with Dana</span>
+          </div>
+        </div>
+
+        <div class="track">
+          <div class="track-hdr admin">🟡 Admin & Life</div>
+          <div class="task-row">
+            <input type="checkbox" class="task-cb" onchange="demoCheck(this, 'Scheduled car service appointment')">
+            <span class="task-lbl">Schedule car service <span class="pill pill-r">↻</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLAN -->
+      <div class="card">
+        <div class="sec-hdr"><span class="sec-lbl">Today's Plan · generated 7:56 am</span></div>
+
+        <div class="focus-row">
+          <div class="focus-n">1</div>
+          <div>
+            <div class="focus-name">Meridian prep + demo</div>
+            <div class="focus-detail">Review the AI triage spec, pull your clinical workflow examples, run the 1pm demo. This is the one thing today.</div>
+            <span class="focus-est">~2 hr</span>
+          </div>
+        </div>
+
+        <div class="focus-row">
+          <div class="focus-n">2</div>
+          <div>
+            <div class="focus-name">Northstar application</div>
+            <div class="focus-detail">JD is strong. Own roadmap, clinical AI, small team. Submit before noon.</div>
+            <span class="focus-est">~45 min</span>
+          </div>
+        </div>
+
+        <div class="focus-row">
+          <div class="focus-n">3</div>
+          <div>
+            <div class="focus-name">Holloway follow-up</div>
+            <div class="focus-detail">Two days overdue. Short email. 10 minutes.</div>
+            <span class="focus-est">~10 min</span>
+          </div>
+        </div>
+
+        <div class="not-today-lbl">Not today</div>
+        <div class="skip-row">Monthly review — Friday when the week is closed</div>
+        <div class="skip-row">Helix roadmap update — waiting on Dana's retro notes</div>
+
+        <div class="intention">Demo is the only thing that matters today. Everything else is cleanup around it.</div>
+      </div>
+    </div>
+
+    <!-- INBOX CHECK -->
+    <div class="card mt">
+      <div class="sec-hdr"><span class="sec-lbl">Inbox Check · last 24h</span></div>
+      <div class="inbox-cards">
+        <div class="inbox-card">
+          <a class="inbox-sender" href="#">Priya Nair — Northstar Health</a>
+          <span class="inbox-addr">p.nair@northstarhealth.io</span>
+          <div class="inbox-sub">Re: PM opening — interested in your background</div>
+          <div class="inbox-snip">Hi Alex, saw your profile and wanted to reach out before we post externally...</div>
+          <div class="inbox-time">7:12 am</div>
+        </div>
+        <div class="inbox-card">
+          <a class="inbox-sender" href="#">Dana Reyes</a>
+          <span class="inbox-addr">dana@helixproduct.co</span>
+          <div class="inbox-sub">Sprint retro — can we do 3pm instead?</div>
+          <div class="inbox-snip">Hey — if you're free at 3 that works better for Marcus too...</div>
+          <div class="inbox-time">6:44 am</div>
+        </div>
+        <div class="inbox-card">
+          <a class="inbox-sender" href="#">Tom Weller — Meridian AI</a>
+          <span class="inbox-addr">tom.w@meridianai.com</span>
+          <div class="inbox-sub">Confirmed for 1pm — two additional stakeholders joining</div>
+          <div class="inbox-snip">Just a heads up, our CMO and VP Eng will be on the call as well...</div>
+          <div class="inbox-time">6:03 am</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SYNTHESIS -->
+    <div class="card mt">
+      <div class="sec-hdr"><span class="sec-lbl">What Today Looks Like</span></div>
+      <p class="synthesis">The Meridian demo at 1pm just got bigger — CMO and VP Eng joining means this is no longer a product conversation, it's a buying conversation. That changes what you lead with. Priya at Northstar reached out proactively before the posting goes live — that's a signal worth acting on before noon. Dana's retro can shift to 3pm, which actually gives you a clean morning block. The Holloway follow-up has been sitting since Monday. Ten minutes before lunch closes it.</p>
+    </div>
+  </div>
+
+  <!-- CADENCE -->
+  <div class="zone">
+    <span class="zone-label">Cadence</span>
+    <div class="card">
+      <div class="cadence-row"><span class="cadence-lbl daily">Daily</span><span class="cadence-items">Lunch away from desk · 20 min walk · Protected wind-down by 9pm</span></div>
+      <div class="cadence-row"><span class="cadence-lbl weekly">Weekly remaining</span><span class="cadence-items">2 more outreach contacts · 1 strength session · AI learning block</span></div>
+      <div class="cadence-row"><span class="cadence-lbl biweekly">Biweekly (week 2 of 2)</span><span class="cadence-items">Fractional pipeline review due this week</span></div>
+      <div class="cadence-row"><span class="cadence-lbl monthly">Monthly (week 2)</span><span class="cadence-items">Monthly review due end of week</span></div>
+    </div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="zone">
+    <span class="zone-label">Schedule</span>
+
+    <div class="card mb">
+      <div class="sec-hdr"><span class="sec-lbl">Today · Timeline</span></div>
+      <div class="tl-wrap">
+        <div class="tl-hour-row">
+          <div class="tl-hour">8 am</div><div class="tl-hour">9 am</div><div class="tl-hour">10 am</div>
+          <div class="tl-hour">11 am</div><div class="tl-hour">12 pm</div><div class="tl-hour">1 pm</div>
+          <div class="tl-hour">2 pm</div><div class="tl-hour">3 pm</div><div class="tl-hour">4 pm</div>
+          <div class="tl-hour">5 pm</div><div class="tl-hour">6 pm</div>
+        </div>
+        <div class="tl-events">
+          <!-- Meridian demo at 1pm = (13-8)*80 = 400px, 60min = 80px -->
+          <div class="tl-block imp" style="left:400px;width:80px;">Meridian demo<br><span style="font-size:10px;font-family:'DM Mono',monospace">1:00 pm</span></div>
+          <!-- Sprint retro at 3pm = (15-8)*80 = 560px -->
+          <div class="tl-block reg" style="left:560px;width:80px;">Sprint retro<br><span style="font-size:10px;font-family:'DM Mono',monospace">3:00 pm</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-hdr"><span class="sec-lbl">Coming Up · next 6 days</span></div>
+      <div class="cal-row"><span class="cal-day">Thu Mar 13</span><div class="cal-dot reg"></div><span>Fractional pipeline sync — Marco</span><span class="cal-time">10:00 am</span></div>
+      <div class="cal-row"><span class="cal-day">Fri Mar 14</span><div class="cal-dot reg"></div><span>Helix roadmap review</span><span class="cal-time">2:00 pm</span></div>
+      <div class="cal-row"><span class="cal-day">Mon Mar 17</span><div class="cal-dot imp"></div><span style="font-weight:600">Northstar final interview</span><span class="cal-time">11:00 am</span></div>
+      <div class="cal-row"><span class="cal-day">Tue Mar 18</span><div class="cal-dot reg"></div><span>Dentist — Dr. Castellano</span><span class="cal-time">3:30 pm</span></div>
+    </div>
+  </div>
+
+  <!-- READING -->
+  <div class="zone">
+    <span class="zone-label">Reading</span>
+
+    <div class="card mb">
+      <div class="sec-hdr"><span class="sec-lbl">From Your Inbox · last 24h</span></div>
+      <div class="nl-grid">
+        <div>
+          <div class="sec-lbl" style="color:var(--frac);margin-bottom:.6rem">Newsletters</div>
+          <div class="mail-row"><a class="mail-sub" href="#">Clinical AI at the bedside — what actually ships</a><div class="mail-meta">Health Tech Weekly · 6:55 am</div></div>
+          <div class="mail-row"><a class="mail-sub" href="#">The PM's guide to AI evaluation</a><div class="mail-meta">Lenny's Newsletter · 6:30 am</div></div>
+          <div class="mail-row"><a class="mail-sub" href="#">FDA SaMD enforcement update — March 2025</a><div class="mail-meta">RAPS · 5:48 am</div></div>
+        </div>
+        <div>
+          <div class="sec-lbl" style="color:var(--job);margin-bottom:.6rem">Training & Docs</div>
+          <div class="mail-row"><a class="mail-sub" href="#">Module 4: Designing for clinical workflow 📎</a><div class="mail-meta">Maven · 7:01 am</div></div>
+          <div class="mail-row"><a class="mail-sub" href="#">AI in diagnostic imaging — new evidence base</a><div class="mail-meta">NEJM · 6:20 am</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-hdr"><span class="sec-lbl">Today's News</span></div>
+      <div class="news-grid">
+        <div>
+          <div class="news-q-lbl local"><span class="news-dot local"></span>Local · CT</div>
+          <div class="news-headline"><a href="#">Hartford hospital system announces digital health initiative</a><span class="news-src">CT Mirror</span></div>
+          <div class="news-headline"><a href="#">Route 9 construction resumes Thursday — expect delays</a><span class="news-src">Patch</span></div>
+        </div>
+        <div>
+          <div class="news-q-lbl national"><span class="news-dot national"></span>National</div>
+          <div class="news-headline"><a href="#">Medicare expands reimbursement for AI-assisted diagnostics</a><span class="news-src">Reuters</span></div>
+          <div class="news-headline"><a href="#">Tech layoffs continue as hiring shifts toward AI roles</a><span class="news-src">WSJ</span></div>
+        </div>
+        <div>
+          <div class="news-q-lbl political"><span class="news-dot political"></span>Political</div>
+          <div class="news-headline"><a href="#">Senate health committee takes up AI transparency bill</a><span class="news-src">The Hill</span></div>
+          <div class="news-headline"><a href="#">FTC scrutinizes health data privacy in AI products</a><span class="news-src">Politico</span></div>
+        </div>
+        <div>
+          <div class="news-q-lbl intl"><span class="news-dot intl"></span>International</div>
+          <div class="news-headline"><a href="#">UK NHS publishes AI clinical safety framework</a><span class="news-src">Guardian</span></div>
+          <div class="news-headline"><a href="#">EU medical device AI rules take effect in June</a><span class="news-src">FT</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REFERENCE -->
+  <div class="zone">
+    <span class="zone-label">Reference</span>
+    <div class="grid2">
+      <div class="card">
+        <div class="sec-hdr"><span class="sec-lbl">Carrying Over</span></div>
+        <div class="list-row">Finish Meridian engagement brief — post-demo version</div>
+        <div class="list-row">Draft Northstar cover note — lead with clinical AI at the shift</div>
+        <div class="list-row">Helix roadmap update — waiting on Dana retro notes</div>
+      </div>
+      <div class="card">
+        <div class="sec-hdr"><span class="sec-lbl">Ideas to Come Back To</span></div>
+        <div class="list-row"><span class="idea-tag fun">[Fun]</span> Build a shift-story generator for interview prep</div>
+        <div class="list-row"><span class="idea-tag tooling">[Tooling]</span> Auto-tag cadence week from calendar anchor date</div>
+        <div class="list-row"><span class="idea-tag waiting">[Waiting]</span> Fractional pricing page — waiting on Marco feedback</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <!-- ACTIVITY LOG -->
+  <div class="zone">
+    <span class="zone-label">Activity Log</span>
+    <div class="card">
+      <div class="log-input-row">
+        <input class="log-input" id="log-input" type="text" placeholder="Add a note… (Enter to save)">
+        <button class="log-add-btn" onclick="addNote()">Add</button>
+      </div>
+      <div class="log-entries" id="log-entries">
+        <div class="log-entry">
+          <span class="log-ts">7:58 am</span>
+          <span class="log-type note">note</span>
+          <span class="log-msg">Tom confirmed CMO and VP Eng joining the 1pm — prep for a buying conversation not a product one</span>
+        </div>
+        <div class="log-entry">
+          <span class="log-ts">7:41 am</span>
+          <span class="log-type task">task</span>
+          <span class="log-msg">Completed: Set up Obsidian weekly cadence note</span>
+        </div>
+      </div>
+    </div>
+    <button class="debrief-btn">Send to Debrief</button>
+  </div>
+
+  <footer>briefing_2025-03-12.html · Squirrel's Desk v8 · demo file</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function demoCheck(cb, label) {
+  if (cb.checked) {
+    const row = cb.closest('.task-row');
+    const lbl = row.querySelector('.task-lbl');
+    cb.disabled = true;
+    lbl.classList.add('done');
+    const status = document.createElement('span');
+    status.className = 'task-status';
+    status.textContent = '✓ done';
+    lbl.appendChild(status);
+    addLogEntry('task', 'Completed: ' + label);
+    showToast('✓ ' + label);
+  }
+}
+
+function addLogEntry(type, msg) {
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes().toString().padStart(2,'0');
+  const ampm = h >= 12 ? 'pm' : 'am';
+  const ts = (h % 12 || 12) + ':' + m + ' ' + ampm;
+  const entries = document.getElementById('log-entries');
+  const div = document.createElement('div');
+  div.className = 'log-entry';
+  div.innerHTML = `<span class="log-ts">${ts}</span><span class="log-type ${type}">${type}</span><span class="log-msg">${msg}</span>`;
+  entries.insertBefore(div, entries.firstChild);
+}
+
+function addNote() {
+  const input = document.getElementById('log-input');
+  const val = input.value.trim();
+  if (!val) return;
+  addLogEntry('note', val);
+  input.value = '';
+}
+
+document.getElementById('log-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addNote();
+});
+</script>
+</body>
+</html>
